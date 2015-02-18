@@ -1,4 +1,4 @@
-# Tight.js
+# Tight [![Build Status](https://travis-ci.org/nelsond/tight.js.svg?branch=master)](https://travis-ci.org/nelsond/tight.js)
 
 Tight is a simple JavaScript DOM-binding library. You can use Tight to
 bind values to html/text or attributes of DOM elements and have them automatically updated once you change the corresponding values. The library is heavily inspired by ember.js.
