@@ -15,6 +15,8 @@ In case you prefer not to use bower, you can download a [release](http:///github
 
 ## Usage
 
+You can find an example on jsFiddle [here](http://jsfiddle.net/hLukqncx/).
+
 ### Bindings
 
 We use the following DOM:
