@@ -128,6 +128,10 @@ module.exports = function(grunt) {
       }
     },
 
+    jshint: {
+      all: ["Gruntfile.js", "lib/tight.js"]
+    },
+
     karma: {
       options: {
         basePath: "",
