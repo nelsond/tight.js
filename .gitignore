@@ -1,0 +1,11 @@
+# test coverage
+coverage/
+
+# browserstack credentials
+browserstack.json
+
+# nvm
+.nvmrc
+
+# dist
+dist/

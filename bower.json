@@ -1,0 +1,24 @@
+{
+  "name": "Tight",
+  "version": "0.0.1",
+  "authors": [
+    "Nelson Darkwah Oppong <ndo@felixnelson.de>"
+  ],
+  "description": "Tight is a simple JavaScript DOM-binding library.",
+  "main": "./lib/tight.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "binding"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/nelsond/tight.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
