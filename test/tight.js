@@ -10,11 +10,17 @@ var createBindingElement = function(binding) {
   return element;
 };
 
+var defaultFilters;
+
 describe("Tight", function() {
+
   beforeEach(function () {
     // reset Tight
     Tight._data = {};
     Tight._observers = {};
+    Tight._filters = Tight._defaultFilters;
+    Tight._elementsWithBinding = [];
+    Tight._bindingsIndex = {};
 
     // reset DOM
     testContainer.innerHTML = "";
@@ -51,6 +57,133 @@ describe("Tight", function() {
       };
 
       expect(computeCyclic).toThrow();
+    });
+  });
+
+  describe(".parseBindings", function() {
+    it("updates bindings", function() {
+      Tight.set("model.name", "Richard Feynman");
+
+      var element = createBindingElement("model.name");
+      Tight.set("model.name", "Albert Einstein");
+      Tight.parseBindings();
+
+      expect(element.innerHTML).toEqual("Albert Einstein");
+    });
+  });
+
+  describe(".defineFilter", function() {
+    it("defines new filter", function() {
+      var update = function() {
+        Tight.set("model.name", "Albert Einstein");
+        Tight.parseBindings();
+      };
+
+      var element = createBindingElement("model.name | notDefiniedFilter");
+      expect(update).toThrow();
+
+      Tight.defineFilter("notDefiniedFilter", function(str) {
+        return "Hello World";
+      });
+
+      Tight.parseBindings();
+      expect(element.innerHTML).toEqual("Hello World");
+    });
+
+    it("throws error if second argument is not a function", function() {
+      var createInvalidFilter = function() {
+        Tight.defineFilter("invalidFilter", "invalid");
+      };
+
+      expect(createInvalidFilter).toThrow();
+    });
+  });
+
+  describe("default filters", function() {
+    describe("upcase", function() {
+      it("returns an uppercase string", function() {
+        var element = createBindingElement("example | upcase");
+        Tight.set("example", "hello");
+
+        expect(element.innerHTML).toEqual("HELLO");
+      });
+    });
+
+    describe("downcase", function() {
+      it("returns a lowercase string", function() {
+        var element = createBindingElement("example | downcase");
+        Tight.set("example", "HELLO");
+
+        expect(element.innerHTML).toEqual("hello");
+      });
+    });
+
+    describe("replace", function() {
+      it("returns a string with the replacement", function() {
+        var element = createBindingElement("example | replace: 'l', ''");
+        Tight.set("example", "hello world");
+
+        expect(element.innerHTML).toEqual("heo word");
+      });
+    });
+
+    describe("replaceFirst", function() {
+      it("returns a string with the replacement", function() {
+        var element = createBindingElement("example | replaceFirst: 'l', ''");
+        Tight.set("example", "hello world");
+
+        expect(element.innerHTML).toEqual("helo world");
+      });
+    });
+
+    describe("split", function() {
+      it("returns an array from a splitted string", function() {
+        var element = createBindingElement("example | split: ' ' | join: ', '");
+        Tight.set("example", "hello world");
+
+        expect(element.innerHTML).toEqual("hello, world");
+      });
+    });
+
+    describe("join", function() {
+      it("returns a string from an array", function() {
+        var element = createBindingElement("example | join: ' '");
+        Tight.set("example", ["hello", "world"]);
+
+        expect(element.innerHTML).toEqual("hello world");
+      });
+    });
+
+    describe("first", function() {
+      it("returns the first element of an array", function() {
+        var element = createBindingElement("example | first");
+        Tight.set("example", ["one", "two", "three"]);
+
+        expect(element.innerHTML).toEqual("one");
+      });
+    });
+
+    describe("last", function() {
+      it("returns the last element of an array", function() {
+        var element = createBindingElement("example | last");
+        Tight.set("example", ["one", "two", "three"]);
+
+        expect(element.innerHTML).toEqual("three");
+      });
+    });
+  });
+
+  describe(".filters", function() {
+    it("returns defined filters", function() {
+      var identityFunc = function(e) {
+        return e;
+     }, expectedCount = 10 + Object.keys(Tight._defaultFilters).length;
+
+      for (var i=0; i<10; i++) {
+        Tight.defineFilter("test" + i, identityFunc);
+      }
+
+      expect(Object.keys(Tight.filters()).length).toEqual(expectedCount);
     });
   });
 
@@ -124,6 +257,8 @@ describe("Tight", function() {
           modelPagesCurrent = createBindingElement("model.pages.current"),
           version = createBindingElement("version");
 
+      Tight.parseBindings();
+
       Tight.set("model", {
         name: "Albert Einstein"
       });
@@ -136,25 +271,37 @@ describe("Tight", function() {
       expect(version.innerHTML).toEqual("1");
     });
 
-    it("updates attributes in bindings", function() {
-      var direct = createBindingElement("model.url:src"),
-          onOff = createBindingElement("model.active:class:on:off"),
-          on = createBindingElement("model.active:class:on"),
-          off = createBindingElement("model.active:class::off");
+    it("updates with default filters in bindings", function() {
+      var changeAttr = createBindingElement("model.url | attr: 'src'"),
+          toggleClass = createBindingElement("model.active | attr: 'class', 'on', 'off'");
+
+      Tight.parseBindings();
 
       Tight.set("model.url", "http://example.com/image.jpg");
       Tight.set("model.active", false);
 
-      expect(direct.getAttribute("src")).toEqual("http://example.com/image.jpg");
-      expect(onOff.getAttribute("class")).toEqual("off");
-      expect(off.getAttribute("class")).toEqual("off");
-      expect(on.getAttribute("class")).toEqual("");
+      expect(changeAttr.getAttribute("src")).toEqual("http://example.com/image.jpg");
+      expect(toggleClass.getAttribute("class")).toEqual("off");
 
       Tight.set("model.active", true);
 
-      expect(onOff.getAttribute("class")).toEqual("on");
-      expect(off.getAttribute("class")).toEqual("");
-      expect(on.getAttribute("class")).toEqual("on");
+      expect(toggleClass.getAttribute("class")).toEqual("on");
+    });
+
+    it("updates with filters in bindings", function() {
+      var filterChain = createBindingElement("model.name | replace: \"Albert\", 'Richard' | replace: 'Einstein', 'Feynman' | upcase");
+
+      Tight.defineFilter("upcase", function(str) {
+        return str.toUpperCase();
+      });
+      Tight.defineFilter("replace", function(str, a, b) {
+        return str.replace(a, b);
+      });
+
+      Tight.parseBindings();
+      Tight.set("model.name", "Albert Einstein");
+
+      expect(filterChain.innerHTML).toEqual("Richard Feynman".toUpperCase());
     });
 
     it("removes data from bindings", function() {

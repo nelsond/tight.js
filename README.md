@@ -38,6 +38,7 @@ and use Tight to populate the bindings:
 ```javascript
 // set contact with properties firstName, lastName and avatarUrl
 Tight.set("contact", {
+  active:    true,
   firstName: "Albert",
   lastName:  "Einstein",
   avatarUrl: "http://goo.gl/UAKXts"
@@ -59,7 +60,7 @@ The DOM will now contain the contact information:
   <img src="http://goo.gl/UAKXts" data-binding="contact.avatarUrl:src" />
 
   <h2>Contact Details</h2>
-  <dl>
+  <dl data-binding="contact.active:class:white:red">
     <dt>First Name: </dt>
     <dd data-binding="contact.firstName">Albert</dd>
     <dt>Last Name: </dt>
