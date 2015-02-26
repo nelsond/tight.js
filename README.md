@@ -209,16 +209,23 @@ We assume the following values have been set before applying the filters:
 
 ```javascript
 Tight.set("exampleStr", "Example Value");
+Tight.set("exampleBool", false);
 Tight.set("exampleNum", 10);
 Tight.set("exampleArray", ["one", "two", "three"]);
 ```
 
-#### attr: attribute
+#### attr: attribute, [toggleTrue, toggleFalse]
 
 Assigns the value to the desired attribute of an element.
 
 ```html
 <div data-binding="exampleStr | attr: 'src'" src="example value"></div>
+```
+
+You can also toggle between two values(`toggleTrue` and `toggleFalse`):
+
+```html
+<div data-binding="exampleBool | attr: 'class', 'on', 'off'" class="off"></div>
 ```
 
 Make sure to call this filter is called last, i. e.:
