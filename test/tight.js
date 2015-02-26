@@ -100,6 +100,22 @@ describe("Tight", function() {
   });
 
   describe("default filters", function() {
+    describe("attr", function() {
+      it("sets attribute", function() {
+        var element = createBindingElement("example | attr: 'class'");
+        Tight.set("example", "hello");
+
+        expect(element.getAttribute("class")).toEqual("hello");
+      });
+
+      it("toggles attribute values", function() {
+        var element = createBindingElement("example | attr: 'class', 'on', 'off'");
+        Tight.set("example", false);
+
+        expect(element.getAttribute("class")).toEqual('off');
+      });
+    });
+
     describe("upcase", function() {
       it("returns an uppercase string", function() {
         var element = createBindingElement("example | upcase");
