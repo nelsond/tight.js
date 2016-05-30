@@ -1,6 +1,6 @@
 {
   "name": "Tight",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Tight is a simple JavaScript DOM-binding library.",
   "directories": {
     "test": "test"
