@@ -9,3 +9,6 @@ browserstack.json
 
 # dist
 dist/
+
+# npm
+node_modules/
