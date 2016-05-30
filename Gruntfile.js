@@ -42,6 +42,7 @@ module.exports = function(grunt) {
           "karma-jasmine",
           "karma-phantomjs-launcher",
           "karma-chrome-launcher",
+          "karma-firefox-launcher",
           "karma-coverage"
         ],
         preprocessors: {
@@ -53,7 +54,7 @@ module.exports = function(grunt) {
 
       local: {
         singleRun: true,
-        browsers: ["PhantomJS", "Chrome_custom"],
+        browsers: ["PhantomJS", "Chrome_custom", "Firefox"],
         reporters: ["dots", "coverage"]
       }
     }

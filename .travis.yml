@@ -10,3 +10,5 @@ before_script:
 cache:
   directories:
     - node_modules
+addons:
+  firefox: "latest"
