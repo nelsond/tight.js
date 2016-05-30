@@ -1,6 +1,13 @@
 module.exports = function(grunt) {
   require("load-grunt-tasks")(grunt);
 
+  var customLaunchers =  {
+    Chrome_custom: {
+      base: "Chrome",
+      flags: process.env.TRAVIS ? ["--no-sandbox"] : []
+    }
+  };
+
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
 
@@ -34,17 +41,19 @@ module.exports = function(grunt) {
         plugins: [
           "karma-jasmine",
           "karma-phantomjs-launcher",
+          "karma-chrome-launcher",
           "karma-coverage"
         ],
         preprocessors: {
           "lib/tight.js": "coverage"
         },
-        colors: true
+        colors: true,
+        customLaunchers: customLaunchers
       },
 
       local: {
         singleRun: true,
-        browsers: ["PhantomJS"],
+        browsers: ["PhantomJS", "Chrome_custom"],
         reporters: ["dots", "coverage"]
       }
     }
