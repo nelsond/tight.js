@@ -1,8 +1,8 @@
 {
-  "name": "Tight",
+  "name": "tight",
   "version": "0.0.1",
   "authors": [
-    "Nelson Darkwah Oppong <ndo@felixnelson.de>"
+    "Nelson Darkwah Oppong <n@darkwahoppong.com>"
   ],
   "description": "Tight is a simple JavaScript DOM-binding library.",
   "main": "./lib/tight.js",
