@@ -58,6 +58,18 @@ describe("Tight", function() {
 
       expect(computeCyclic).toThrow();
     });
+
+    it('does not throw error for property with similiar name', function() {
+      Tight.set("model.name", "Albert Einstein");
+
+      var computeSimiliar = function() {
+        Tight.compute("model.n", function() {
+          return this.get("model.name");
+        }, ["model.name"]);
+      };
+
+      expect(computeSimiliar).not.toThrow();
+    });
   });
 
   describe(".parseBindings", function() {
