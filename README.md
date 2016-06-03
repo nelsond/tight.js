@@ -300,9 +300,11 @@ Returns last value of an array
 
 ## Browser Support
 
-Tight is tested and works with:
+Tight is tested in:
 
-* IE 8+
-* Chrome 31+
-* Firefox 29+
-* Safari 5+
+* (PhantomJS)
+* Chrome
+* Firefox
+
+... and should work with all modern web browsers including Internet
+Explorer 8 and newer.
