@@ -1,0 +1,12 @@
+v 0.1.0
+	- Add filters capabilities using liquid filter syntax
+	- Remove old attribute binding and replace with filters
+	- Add capabilities to define custom filters
+	- Add some simple default filters
+	- Refactor the binding code and improve performance through index
+
+v 0.0.2
+	- Fix regular expression for observerd properties
+
+v 0.0.1
+	- initial release
